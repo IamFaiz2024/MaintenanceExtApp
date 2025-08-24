@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Maintenance Internet App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MaintenanceExtApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar py-4">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <!--<a class="btn btn-primary w-100" asp-page="~/Tools/Transfer2USB">Transfer 2 USB</a>-->
+                            <!--Above line for a Razor Page and replaced with below Line with MVC Controller View-->
+                            <a class="btn btn-primary w-100" asp-controller="Tools" asp-action="Transfer2USB">Transfer 2 USB</a>
+                        </li>
+                        <li class="nav-item mb-2">                           
+                            <a class="btn btn-primary w-100" asp-controller="Hosts" asp-action="Index">Hosts</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="btn btn-primary w-100" asp-page="/Privacy">Privacy</a>
+                        </li>
+                        <!-- Add more navigation links as needed -->
+                    </ul>
+                </div>
+            </nav>
+            <!-- Main content -->
+            <main class="col-md-10 ms-sm-auto px-4" role="main">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <footer class="border-top footer text-muted mt-4">
+        <div class="container">
+            &copy; 2025 - MaintenanceExtApp - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

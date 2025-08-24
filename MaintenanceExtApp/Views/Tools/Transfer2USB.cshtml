@@ -1,0 +1,179 @@
+﻿@model List<MaintenanceExtApp.Models.Host>
+
+@{
+    // With null/whitespace handling for extra safety
+    var windowsHosts = Model.Where(h =>
+        !string.IsNullOrEmpty(h.HostType) &&
+        !string.IsNullOrEmpty(h.HostStatus) &&
+        h.HostType.Trim().Equals("Windows", StringComparison.OrdinalIgnoreCase) &&
+        h.HostStatus.Trim().Equals("Active", StringComparison.OrdinalIgnoreCase)).ToList();
+
+    var usbHosts = Model.Where(h =>
+        !string.IsNullOrEmpty(h.HostType) &&
+        !string.IsNullOrEmpty(h.HostStatus) &&
+        h.HostType.Trim().Equals("Linux", StringComparison.OrdinalIgnoreCase) &&
+        h.HostStatus.Trim().Equals("Active", StringComparison.OrdinalIgnoreCase)).ToList();
+}
+
+<h2>Tools</h2>
+<p>Welcome to the Tools page!</p>
+
+<h4>Windows Hosts List</h4>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- First List Box (Windows Hosts) -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Windows Hosts (@windowsHosts.Count)</h5>
+                </div>
+                <div class="list-group windows-list" style="max-height: 300px; overflow-y: auto;">
+                    @if (windowsHosts.Any())
+                    {
+                        @foreach (var host in windowsHosts)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action" data-host-id="@host.HostId">
+                                @host.HostName
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item text-muted">
+                            No Windows hosts found
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons Column -->
+        <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+            <div class="d-grid gap-2" style="min-width: 150px;">
+                <!-- Transfer to USB Button -->
+                <button type="button" class="btn btn-success mb-2" name="ToUSB">
+                    → Transfer to USB
+                </button>
+
+                <!-- Transfer from USB Button -->
+                <button type="button" class="btn btn-primary" name="FromUSB">
+                    Transfer from USB ←
+                </button>
+            </div>
+        </div>
+
+        <!-- Second List Box (USB Hosts) -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">USB Hosts (@usbHosts.Count)</h5>
+                </div>
+                <div class="list-group usb-list" style="max-height: 300px; overflow-y: auto;">
+                    @if (usbHosts.Any())
+                    {
+                        @foreach (var host in usbHosts)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action" data-host-id="@host.HostId">
+                                @host.HostName
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item text-muted">
+                            No Linux hosts found
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item {
+        cursor: pointer;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .list-group-item.active {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: white;
+        }
+
+    .btn {
+        white-space: nowrap;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get both list containers
+        const windowsList = document.querySelector('.windows-list');
+        const usbList = document.querySelector('.usb-list');
+
+        // Store selected items
+        let selectedWindowsItem = null;
+        let selectedUsbItem = null;
+
+        // Function to handle selection in Windows list
+        windowsList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('list-group-item')) {
+                // Remove active class from previously selected Windows item
+                if (selectedWindowsItem) {
+                    selectedWindowsItem.classList.remove('active');
+                }
+
+                // Add active class to clicked item
+                e.target.classList.add('active');
+                selectedWindowsItem = e.target;
+
+                // Don't prevent default to allow other click handlers
+            }
+        });
+
+        // Function to handle selection in USB list
+        usbList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('list-group-item')) {
+                // Remove active class from previously selected USB item
+                if (selectedUsbItem) {
+                    selectedUsbItem.classList.remove('active');
+                }
+
+                // Add active class to clicked item
+                e.target.classList.add('active');
+                selectedUsbItem = e.target;
+
+                // Don't prevent default to allow other click handlers
+            }
+        });
+
+        // Optional: Add button click handlers
+        document.querySelector('button[name="ToUSB"]').addEventListener('click', function() {
+            if (selectedWindowsItem) {
+                const hostId = selectedWindowsItem.getAttribute('data-host-id');
+                const hostName = selectedWindowsItem.textContent;
+                console.log('Transfer to USB:', hostId, hostName);
+                // Add your transfer logic here
+            } else {
+                alert('Please select a Windows host to transfer.');
+            }
+        });
+
+        document.querySelector('button[name="FromUSB"]').addEventListener('click', function() {
+            if (selectedUsbItem) {
+                const hostId = selectedUsbItem.getAttribute('data-host-id');
+                const hostName = selectedUsbItem.textContent;
+                console.log('Transfer from USB:', hostId, hostName);
+                // Add your transfer logic here
+            } else {
+                alert('Please select a USB host to transfer.');
+            }
+        });
+    });
+</script>

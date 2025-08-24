@@ -1,0 +1,78 @@
+﻿@model IEnumerable<MaintenanceExtApp.Models.Host>
+
+<h2>Hosts Management</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Host Name</th>
+            <th>Host Address</th>
+            <th>Shared Path</th>
+            <th>User Name</th>
+            <th>Password</th>
+            <th>Status</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var host in Model)
+        {
+            <tr>
+                <td><input type="text" name="HostName" value="@host.HostName" form="editForm_@host.HostId" class="form-control" /></td>
+                <td><input type="text" name="HostAddress" value="@host.HostAddress" form="editForm_@host.HostId" class="form-control" /></td>
+                <td><input type="text" name="HostSharedPath" value="@host.HostSharedPath" form="editForm_@host.HostId" class="form-control" /></td>
+                <td><input type="text" name="HostUserName" value="@host.HostUserName" form="editForm_@host.HostId" class="form-control" /></td>
+                <td><input type="password" name="HostPassword" value="@host.HostPassword" form="editForm_@host.HostId" class="form-control" /></td>
+                <td>
+                    <select name="HostStatus" form="editForm_@host.HostId" class="form-control">
+                        <option value="Active" selected="@(host.HostStatus == "Active" ? "selected" : null)">Active</option>
+                        <option value="Offline" selected="@(host.HostStatus == "Offline" ? "selected" : null)">Offline</option>
+                        <option value="Cancled" selected="@(host.HostStatus == "Cancled" ? "selected" : null)">Cancled</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="HostType" form="editForm_@host.HostId" class="form-control">
+                        <option value="Windows" selected="@(host.HostType == "Windows" ? "selected" : null)">Windows</option>
+                        <option value="Linux" selected="@(host.HostType == "Linux" ? "selected" : null)">Linux</option>
+                    </select>
+                </td>
+                <td>
+                    <form id="editForm_@host.HostId" asp-action="Edit" method="post" style="display:inline-block;">
+                        <input type="hidden" name="HostId" value="@host.HostId" />
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </form>
+
+                    <form asp-action="Delete" method="post" style="display:inline-block;">
+                        <input type="hidden" name="HostId" value="@host.HostId" />
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        <!-- Row for adding new host -->
+        <tr>
+            <form asp-action="Create" method="post">
+                <td><input type="text" name="HostName" class="form-control" /></td>
+                <td><input type="text" name="HostAddress" class="form-control" /></td>
+                <td><input type="text" name="HostSharedPath" class="form-control" /></td>
+                <td><input type="text" name="HostUserName" class="form-control" /></td>
+                <td><input type="password" name="HostPassword" class="form-control" /></td>
+                <td>
+                    <select name="HostStatus" class="form-control">
+                        <option value="Active">Active</option>
+                        <option value="Offline">Offline</option>
+                    <option value="Cancled">Cancled</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="HostType" class="form-control">
+                        <option value="Windows">Windows</option>
+                        <option value="Linux">Linux</option>
+                </select>
+                <td>
+                    <button type="submit" class="btn btn-success btn-sm">Add</button>
+                </td>
+            </form>
+        </tr>
+    </tbody>
+</table>
